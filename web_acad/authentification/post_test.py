@@ -8,16 +8,16 @@ proxies = {'http': 'http://127.0.0.1:8087', 'https': 'http://127.0.0.1:8087'}
 
 def post_login2(url, mfa_code):
     headers = {
-        "Host": "0af0007703b12202817abc3a008a00d2.web-security-academy.net",
-        "Cookie": "verify=carlos",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0",
+        "Host": "0ab800480340f2878248790f00620064.web-security-academy.net",
+        "Cookie": "session=Mq9IGSOdGAIqfPvaKpxDJ94YNxZoM6f8; verify=carlos",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
         "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
         "Accept-Encoding": "gzip, deflate, br",
         "Content-Type": "application/x-www-form-urlencoded",
         "Content-Length": "13",
-        "Origin": "https://0af0007703b12202817abc3a008a00d2.web-security-academy.net",
-        "Referer": "https://0af0007703b12202817abc3a008a00d2.web-security-academy.net/login2",
+        "Origin": "https://0ab800480340f2878248790f00620064.web-security-academy.net",
+        "Referer": "https://0ab800480340f2878248790f00620064.web-security-academy.net/login2",
         "Upgrade-Insecure-Requests": "1",
         "Sec-Fetch-Dest": "document",
         "Sec-Fetch-Mode": "navigate",

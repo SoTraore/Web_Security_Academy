@@ -33,7 +33,7 @@ def brute_force_attack(url):
         #     sys.stdout.write("\r" + mfcode)
         #     sys.stdout.flush()
 
-    # return mfa_code
+    return back
 
 if __name__ == "__main__":
     try:
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     mfcode = brute_force_attack(url)
 
-    if mfcode:
+    if mfcode :
         print("(+) The lab has been solved with success")
     else:
         print("(-) Fail to resolve the lab")
