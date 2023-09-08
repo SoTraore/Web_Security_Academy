@@ -7,6 +7,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 proxies = {"http":"http://127.0.0.1:8087", "https":"http://127.0.0.1:8087"}
 
 def auth_exploit(url) :
+    # Not yet adding the solution I will later 
+    # Here is my contact soultra@yahoo.com if you want me complete this part
     pass
 
 if __name__ == "__main__" :
