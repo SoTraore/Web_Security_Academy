@@ -46,7 +46,7 @@ def business_logic_exploit(session, url) :
         soup  = BeautifulSoup(r.text, 'html.parser')
         pattern = r'<th>\$(\d+\.\d+)</th>'
         digit = soup.find_all(string=pattern)
-        value = int(digit)
+        value = int(digit[len(digit)-1])
         i += 1
     
     data = {'data':csrf_token}
