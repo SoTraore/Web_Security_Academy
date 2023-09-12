@@ -1,0 +1,11 @@
+
+1. Go to <url>/.git
+2. On a linux terminal do this :
+    wget -r  <url>/.git
+    apt-get update 
+    apt-get install git-cola
+3. Open from the search bar look for "git coloa"
+    Open it select the folder where you have downloaded the git content
+    And then on the git-cola application interface click on commit 
+    then select "undo the last commit" then after that you will 
+    see the password of the administrator
